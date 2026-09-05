@@ -1,9 +1,8 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import { deJureScenarios } from "@/content/systems";
+import { deJureScenarios, democraticSafeguardsByScenario } from "@/content/systems";
 import { lerp } from "@/lib/visualization-utils";
-import { WhatIf } from "@/components/ui/WhatIf";
 import { ModuleTerms } from "@/components/ui/GlossaryChip";
 import { WhyThisMatters } from "@/components/ui/WhyThisMatters";
 
@@ -115,6 +114,44 @@ export function DeJureDeFacto() {
         </div>
       </div>
 
+      {democraticSafeguardsByScenario[scenario.id]?.length ? (
+        <div className="result-card mt-8" data-tone="power">
+          <span className="eyebrow">این را چگونه مهار می‌کنند؟</span>
+          <span className="ms-2 text-sm text-[color:var(--muted)]">
+            نمونهٔ مستند از دموکراسی‌های کارکرد
+          </span>
+
+          <div className="mt-5 space-y-5">
+            {democraticSafeguardsByScenario[scenario.id]!.map((s) => (
+              <div
+                key={s.id}
+                className="border-s border-[color:var(--line-strong)] ps-4"
+              >
+                <p className="font-display text-base font-medium">
+                  <span className="me-1.5" aria-hidden>
+                    {s.flag}
+                  </span>
+                  {s.countryFa}
+                  <span
+                    className="ms-2 text-sm font-normal opacity-55"
+                    lang="en"
+                    dir="ltr"
+                  >
+                    {s.countryEn}
+                  </span>
+                  <span className="ms-2 text-sm font-normal text-[color:var(--muted)]">
+                    · {s.mechanismFa}
+                  </span>
+                </p>
+                <p className="mt-2 text-[0.95rem] leading-8 text-[color:var(--ink-soft)]">
+                  {s.detailFa}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <div className="mt-10 max-w-xl">
         <label
           htmlFor={sliderId}
@@ -141,11 +178,6 @@ export function DeJureDeFacto() {
         </div>
       </div>
 
-      <WhatIf
-        className="mt-8"
-        titleFa="اگر متن قانون قوی باشد اما اجرا ضعیف؟"
-        bodyFa="استقلال روی کاغذ می‌ماند. نوار بالا وقتی به سمت عمل می‌رود کوتاه می‌شود؛ همان فاصله میان ادعا و اهرم واقعی."
-      />
       <WhyThisMatters bodyFa="فاصلهٔ میان متن قانون و عملکرد واقعی همان چیزی است که توضیح می‌دهد چرا کشوری با قانون اساسیِ «آزادی بیان تضمین‌شده» می‌تواند در عمل رسانهٔ منتقد نداشته باشد." />
     </section>
   );
