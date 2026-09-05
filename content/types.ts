@@ -1,0 +1,206 @@
+/** Shared content model for سازوکار قدرت / The Machinery of Power */
+
+export type SourceType = "scholarly" | "primary" | "dataset" | "reference";
+
+export type RuleCategoryId =
+  | "people"
+  | "personalist"
+  | "monarchy"
+  | "oligarchy"
+  | "party"
+  | "military"
+  | "theocratic";
+
+export type ExecutiveSystemType =
+  | "presidential"
+  | "parliamentary"
+  | "semi-presidential";
+
+export type PowerMapEdgeKind =
+  | "authority"
+  | "votes"
+  | "information"
+  | "accountability"
+  | "coercion";
+
+export type FingerprintAxisId =
+  | "executiveConcentration"
+  | "legislativeStrength"
+  | "judicialIndependence"
+  | "electoralCompetition"
+  | "decentralization"
+  | "constitutionalConstraints"
+  | "mediaIndependence"
+  | "leadershipTurnover"
+  | "partyCompetition"
+  | "civilianControl"
+  | "accountability";
+
+export interface PoliticalConcept {
+  id: string;
+  titleFa: string;
+  titleEn: string;
+  category: string;
+  shortDescriptionFa: string;
+  explanationFa: string;
+  examples: CountryExample[];
+  dimensions: Dimension[];
+  misconceptions?: string[];
+  tradeoffs?: Tradeoff[];
+  sourceIds?: string[];
+}
+
+export interface CountryExample {
+  id: string;
+  nameFa: string;
+  nameEn: string;
+  noteFa: string;
+}
+
+export interface Dimension {
+  id: string;
+  labelFa: string;
+  labelEn: string;
+  descriptionFa?: string;
+}
+
+export interface Tradeoff {
+  id: string;
+  choiceFa: string;
+  strengthFa: string;
+  vulnerabilityFa: string;
+}
+
+export interface CountrySystem {
+  id: string;
+  nameFa: string;
+  nameEn: string;
+  headOfState: string;
+  headOfGovernment: string;
+  executiveType: string;
+  legislature: string;
+  electoralSystem?: string;
+  territorialStructure?: string;
+  judicialIndependence?: string;
+  politicalCompetition?: string;
+  fingerprint: Record<FingerprintAxisId, number>;
+  sourceIds?: string[];
+  /** Short paragraph shown when informed observers disagree on classification. */
+  contestedNoteFa?: string;
+}
+
+/** Same shape as a current-day country, plus era metadata. */
+export interface HistoricalCountrySystem extends Omit<CountrySystem, "id"> {
+  id: string;
+  parentCountryId: string;
+  eraLabelFa: string;
+  eraLabelEn: string;
+  yearRangeFa: string;
+  keyEventFa: string;
+}
+
+export interface GlossaryTerm {
+  id: string;
+  termFa: string;
+  termEn: string;
+  /** ~1 sentence, for inline tooltip/chip */
+  shortDefFa: string;
+  /** optional 2–3 sentence expansion for a glossary page */
+  longDefFa?: string;
+  relatedConceptIds?: string[];
+}
+
+export interface CrisisChoice {
+  id: string;
+  labelFa: string;
+  consequenceFa: string;
+}
+
+export interface CrisisScenario {
+  id: string;
+  titleFa: string;
+  setupFa: string;
+  choices: CrisisChoice[];
+  institutionalLessonFa: string;
+}
+
+export interface BuilderOption {
+  id: string;
+  labelFa: string;
+  labelEn: string;
+  descFa?: string;
+}
+
+export interface FingerprintAxis {
+  id: FingerprintAxisId;
+  labelFa: string;
+  labelEn: string;
+}
+
+export interface PowerMapNode {
+  id: string;
+  x: number;
+  y: number;
+  labelFa: string;
+  labelEn: string;
+  questionsFa: string[];
+  explanationFa: string;
+}
+
+export interface PowerMapEdge {
+  id: string;
+  from: string;
+  to: string;
+  kind: PowerMapEdgeKind;
+  labelFa?: string;
+}
+
+export interface RuleCategory {
+  id: RuleCategoryId;
+  titleFa: string;
+  titleEn: string;
+  questionAnsweredFa: string;
+  questionNotAnsweredFa: string;
+  shortFa: string;
+  combineNoteFa: string;
+}
+
+export interface AuthorityFlow {
+  from: string;
+  to: string;
+  bidirectional?: boolean;
+}
+
+export interface ExecutiveSystem {
+  id: ExecutiveSystemType;
+  titleFa: string;
+  titleEn: string;
+  flows: AuthorityFlow[];
+  explanationFa: string;
+  tradeoffs: Tradeoff[];
+}
+
+export interface ConfusionCard {
+  id: string;
+  statementFa: string;
+  revealFa: string;
+  visualHintFa: string;
+}
+
+export interface DeJureScenario {
+  id: string;
+  titleFa: string;
+  paperClaimFa: string;
+  practiceFactsFa: string[];
+  /** 0 = fully captured in practice; 1 = independence holds in practice */
+  independenceAtPractice: number;
+}
+
+export interface ContentSource {
+  id: string;
+  titleFa: string;
+  titleEn: string;
+  type: SourceType;
+  noteFa?: string;
+  url?: string;
+}
