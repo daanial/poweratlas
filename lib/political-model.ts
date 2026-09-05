@@ -1,4 +1,6 @@
 import type { ConstitutionConfig } from "@/content/builder";
+import { countries } from "@/content/countries";
+import { historicalCountries } from "@/content/countries-historical";
 import type { FingerprintAxisId } from "@/content/types";
 import { clamp } from "@/lib/visualization-utils";
 
@@ -363,4 +365,69 @@ export function computeConcentrationWeights(
     independentBodies: check,
     civilSociety: people,
   };
+}
+
+export interface NearestCountryMatch {
+  id: string;
+  nameFa: string;
+  nameEn: string;
+  /** 0–1; 1 means an identical fingerprint. */
+  similarity: number;
+  /** Set for a historical time-slice (e.g. Weimar Germany) rather than a current-day country. */
+  eraLabelFa?: string;
+}
+
+const FINGERPRINT_AXIS_COUNT = 11;
+// Max possible Euclidean distance across 11 axes each bounded to [0, 1].
+const MAX_FINGERPRINT_DISTANCE = Math.sqrt(FINGERPRINT_AXIS_COUNT);
+
+function fingerprintDistance(a: Fingerprint, b: Fingerprint): number {
+  const axes = Object.keys(a) as FingerprintAxisId[];
+  const sumSquares = axes.reduce((sum, axis) => {
+    const diff = a[axis] - b[axis];
+    return sum + diff * diff;
+  }, 0);
+  return Math.sqrt(sumSquares);
+}
+
+/**
+ * Nearest real-world (or historical) countries to a builder fingerprint, by
+ * Euclidean distance across all 11 axes. Purely descriptive — closeness in
+ * institutional shape, not an endorsement or a moral ranking.
+ */
+export function findNearestCountries(
+  fingerprint: Fingerprint,
+  count = 3,
+): NearestCountryMatch[] {
+  const candidates = [
+    ...countries.map((c) => ({
+      id: c.id,
+      nameFa: c.nameFa,
+      nameEn: c.nameEn,
+      fingerprint: c.fingerprint,
+      eraLabelFa: undefined as string | undefined,
+    })),
+    ...historicalCountries.map((c) => ({
+      id: c.id,
+      nameFa: c.nameFa,
+      nameEn: c.nameEn,
+      fingerprint: c.fingerprint,
+      eraLabelFa: c.eraLabelFa as string | undefined,
+    })),
+  ];
+
+  return candidates
+    .map((c) => ({
+      id: c.id,
+      nameFa: c.nameFa,
+      nameEn: c.nameEn,
+      eraLabelFa: c.eraLabelFa,
+      similarity: clamp(
+        1 - fingerprintDistance(fingerprint, c.fingerprint) / MAX_FINGERPRINT_DISTANCE,
+        0,
+        1,
+      ),
+    }))
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, count);
 }

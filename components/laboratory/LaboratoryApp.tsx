@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ConstitutionBuilder } from "@/components/constitution-builder/ConstitutionBuilder";
 import { CrisisSimulator } from "@/components/crisis-simulator/CrisisSimulator";
@@ -14,6 +15,7 @@ import {
   classifySystem,
   computeFingerprint,
   computeTradeoffs,
+  findNearestCountries,
 } from "@/lib/political-model";
 import { VISIT_KEYS } from "@/lib/visit-flags";
 
@@ -36,6 +38,7 @@ export function LaboratoryApp() {
   const fingerprint = useMemo(() => computeFingerprint(config), [config]);
   const system = useMemo(() => classifySystem(config), [config]);
   const tradeoffs = useMemo(() => computeTradeoffs(config), [config]);
+  const nearest = useMemo(() => findNearestCountries(fingerprint, 3), [fingerprint]);
 
   function goTo(next: Phase) {
     setReached((prev) => (prev.includes(next) ? prev : [...prev, next]));
@@ -170,6 +173,8 @@ export function LaboratoryApp() {
               titleFa="اثر انگشت قدرت"
             />
 
+            <NearestMatchCard matches={nearest} />
+
             <div className="grid gap-6 md:grid-cols-3">
               <TradeBlock title="نقاط قوت ممکن" items={tradeoffs.strengthsFa} />
               <TradeBlock title="آسیب‌پذیری‌ها" items={tradeoffs.vulnerabilitiesFa} />
@@ -208,6 +213,53 @@ export function LaboratoryApp() {
           <CrisisSimulator config={config} />
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function NearestMatchCard({
+  matches,
+}: {
+  matches: ReturnType<typeof findNearestCountries>;
+}) {
+  const top = matches[0];
+  if (!top) return null;
+
+  return (
+    <div className="result-card" data-tone="power">
+      <p className="eyebrow" data-tone="power">
+        نزدیک‌ترین نمونهٔ واقعی
+      </p>
+      <p className="font-display text-xl font-medium">
+        {top.eraLabelFa ? `${top.nameFa} · ${top.eraLabelFa}` : top.nameFa}
+        <span className="ms-2 text-sm font-normal opacity-55" lang="en" dir="ltr">
+          {top.nameEn}
+        </span>
+        <span className="ms-2 text-sm tabular-nums text-[color:var(--muted)]">
+          {Math.round(top.similarity * 100)}٪ شباهت
+        </span>
+      </p>
+      <p className="mt-2 max-w-lg text-sm leading-7 text-[color:var(--ink-soft)]">
+        نظامی که ساختید، از میان ۲۵ کشور و ۴ برهه‌ٔ تاریخیِ همین اطلس، به این نمونه
+        نزدیک‌تر است — بر اساس فاصلهٔ عددی در همهٔ محورهای اثر انگشت، نه شباهت
+        سیاسی یا اخلاقی.
+      </p>
+      {matches.length > 1 ? (
+        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[color:var(--muted)]">
+          {matches.slice(1).map((m) => (
+            <li key={m.id}>
+              {m.eraLabelFa ? `${m.nameFa} (${m.eraLabelFa})` : m.nameFa} ·{" "}
+              {Math.round(m.similarity * 100)}٪
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <Link
+        href="/countries"
+        className="mt-3 inline-block text-xs underline-offset-2 hover:text-[color:var(--power)] hover:underline"
+      >
+        مقایسهٔ کامل نهادها ↩
+      </Link>
     </div>
   );
 }
