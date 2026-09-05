@@ -22,7 +22,7 @@ function usePrefersReducedMotion() {
   );
 }
 
-const HERO_VIDEO_SRC = "/videos/hero.mp4";
+const HERO_VIDEO_SRC = "/videos/hero.mp4?v=scrub";
 const HERO_POSTER_SRC = "/videos/hero-poster.jpg";
 const HERO_LOGO_SRC = "/brand/logo.png";
 
@@ -62,6 +62,28 @@ export function HeroVideoScrub() {
         passive: true,
       });
 
+      let targetTime = 0;
+      let raf = 0;
+
+      const applySeek = () => {
+        raf = 0;
+        if (video.seeking) return;
+        if (Math.abs(video.currentTime - targetTime) < 0.001) return;
+        video.currentTime = targetTime;
+      };
+
+      const queueSeek = () => {
+        if (raf) return;
+        raf = requestAnimationFrame(applySeek);
+      };
+
+      const onSeeked = () => {
+        if (Math.abs(video.currentTime - targetTime) > 0.001) {
+          applySeek();
+        }
+      };
+      video.addEventListener("seeked", onSeeked);
+
       const setup = contextSafe(() => {
         const duration = video.duration;
         if (!Number.isFinite(duration) || duration <= 0) return;
@@ -72,6 +94,7 @@ export function HeroVideoScrub() {
         const overlay = root.querySelector<HTMLElement>("[data-overlay]");
         const hint = root.querySelector<HTMLElement>("[data-hint]");
         const progress = root.querySelector<HTMLElement>("[data-progress]");
+        const maxTime = Math.max(0, duration - 0.04);
 
         const playhead = { time: 0 };
         const tl = gsap.timeline({
@@ -80,7 +103,7 @@ export function HeroVideoScrub() {
             trigger: root,
             start: "top top",
             end: "bottom bottom",
-            scrub: 0.45,
+            scrub: 0.12,
             invalidateOnRefresh: true,
             refreshPriority: -10,
           },
@@ -89,12 +112,11 @@ export function HeroVideoScrub() {
         tl.to(
           playhead,
           {
-            time: duration,
+            time: maxTime,
             duration: 1,
             onUpdate: () => {
-              if (Math.abs(video.currentTime - playhead.time) > 0.01) {
-                video.currentTime = playhead.time;
-              }
+              targetTime = playhead.time;
+              queueSeek();
             },
           },
           0,
@@ -126,6 +148,8 @@ export function HeroVideoScrub() {
       return () => {
         document.documentElement.removeEventListener("touchstart", unlock);
         video.removeEventListener("loadedmetadata", setup);
+        video.removeEventListener("seeked", onSeeked);
+        if (raf) cancelAnimationFrame(raf);
       };
     },
     { scope: rootRef, dependencies: [reduced], revertOnUpdate: true },
