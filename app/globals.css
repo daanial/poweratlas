@@ -189,6 +189,13 @@ body {
   border: 0;
 }
 
+.region-map-land {
+  transition:
+    fill 400ms ease,
+    stroke 200ms ease,
+    stroke-width 200ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .power-token {
     box-shadow: none;
@@ -200,6 +207,10 @@ body {
 
   .flow-dot {
     animation: none !important;
+  }
+
+  .region-map-land {
+    transition: none;
   }
 }
 

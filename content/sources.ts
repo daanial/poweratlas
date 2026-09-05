@@ -92,11 +92,20 @@ export const sources: ContentSource[] = [
   {
     id: "freedom-house-country-reports",
     titleFa: "گزارش‌های سالانهٔ کشوری فریدم‌هاوس",
-    titleEn: "Freedom in the World — Country Reports (Freedom House)",
+    titleEn: "Freedom in the World 2026 — Country Reports (Freedom House)",
     type: "dataset",
     noteFa:
-      "ارزیابی سالانهٔ حقوق سیاسی و آزادی‌های مدنی به تفکیک کشور؛ منبع تکمیلی برای V-Dem.",
-    url: "https://freedomhouse.org/countries/freedom-world/scores",
+      "نمرهٔ آزادی جهانی ۰ تا ۱۰۰ برای سال تقویمی ۲۰۲۵؛ منبع لایهٔ آزادی سیاسی در نقشهٔ همسایگان.",
+    url: "https://freedomhouse.org/country/scores",
+  },
+  {
+    id: "world-bank-wgi",
+    titleFa: "شاخص‌های حکمرانی جهانی بانک جهانی",
+    titleEn: "Worldwide Governance Indicators, 2025 Revision (World Bank)",
+    type: "dataset",
+    noteFa:
+      "برآورد ۲۰۲۴ برای ثبات سیاسی و کیفیت تنظیم‌گری؛ مقیاس تقریبی ۲٫۵− تا ۲٫۵+.",
+    url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
   },
 ];
 

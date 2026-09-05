@@ -252,3 +252,32 @@ export interface ContentSource {
   noteFa?: string;
   url?: string;
 }
+
+export type FreedomHouseStatus = "free" | "partly-free" | "not-free";
+
+export type RegionIndexLayerId =
+  | "politicalFreedom"
+  | "politicalStability"
+  | "investmentClimate";
+
+export interface RegionIndexCountry {
+  id: string;
+  iso3: string;
+  nameFa: string;
+  nameEn: string;
+  /** Short map callout when the full name will not fit. */
+  mapLabelFa?: string;
+  fhScore: number;
+  fhStatus: FreedomHouseStatus;
+  wgiStability: number;
+  wgiRegulatoryQuality: number;
+  noteFa: string;
+}
+
+export interface RegionIndexLayer {
+  id: RegionIndexLayerId;
+  labelFa: string;
+  labelEn: string;
+  shortFa: string;
+  unitFa: string;
+}
