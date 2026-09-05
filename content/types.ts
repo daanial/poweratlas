@@ -209,6 +209,16 @@ export interface DeJureScenario {
   independenceAtPractice: number;
 }
 
+/** A real safeguard from a working democracy against the same capture risk. */
+export interface DemocraticSafeguard {
+  id: string;
+  countryFa: string;
+  countryEn: string;
+  flag: string;
+  mechanismFa: string;
+  detailFa: string;
+}
+
 export interface PoliticalEra {
   id: string;
   periodFa: string;
