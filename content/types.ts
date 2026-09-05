@@ -116,6 +116,19 @@ export interface CrisisChoice {
   consequenceFa: string;
 }
 
+export interface HistoricalCase {
+  id: string;
+  placeFa: string;
+  placeEn: string;
+  /** flag emoji, decorative only — omitted where no single modern state maps cleanly */
+  flag?: string;
+  yearsFa: string;
+  /** the crisis choice this case illustrates, when it maps onto one */
+  choiceId?: string;
+  summaryFa: string;
+  takeawayFa: string;
+}
+
 export interface CrisisScenario {
   id: string;
   titleFa: string;
@@ -194,6 +207,41 @@ export interface DeJureScenario {
   practiceFactsFa: string[];
   /** 0 = fully captured in practice; 1 = independence holds in practice */
   independenceAtPractice: number;
+}
+
+export interface PoliticalEra {
+  id: string;
+  periodFa: string;
+  labelFa: string;
+  labelEn: string;
+  themesFa: string;
+  figuresFa: string;
+}
+
+export interface PoliticalQuote {
+  id: string;
+  personFa: string;
+  personEn: string;
+  quoteFa: string;
+  quoteEn: string;
+}
+
+export interface PoliticalTradition {
+  id: string;
+  eyebrowFa: string;
+  titleFa: string;
+  titleEn: string;
+  bodyFa: string[];
+  quote?: PoliticalQuote;
+  riskLabelFa: string;
+  riskFa: string;
+}
+
+export interface TraditionComparisonRow {
+  id: string;
+  featureFa: string;
+  moralismFa: string;
+  realismFa: string;
 }
 
 export interface ContentSource {

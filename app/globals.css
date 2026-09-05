@@ -668,3 +668,8 @@ button.lab-phase-btn:hover {
     transition: none;
   }
 }
+
+/* Safari still paints a marker on <summary> without this. */
+summary::-webkit-details-marker {
+  display: none;
+}

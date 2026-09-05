@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import PowerMap from "@/components/power-map/PowerMap";
+import { PoliticalThoughtEssay } from "@/components/power-map/PoliticalThoughtEssay";
 import { JourneyContinue } from "@/components/layout/JourneyContinue";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function AtlasPage() {
       subtitleFa="نهادها را انتخاب کنید تا ببینید قدرت از کجا می‌آید، به کجا می‌رود، و چه کسی می‌تواند آن را محدود کند."
     >
       <PowerMap />
+      <PoliticalThoughtEssay />
       <JourneyContinue currentHref="/atlas" />
     </PageShell>
   );

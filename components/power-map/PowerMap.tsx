@@ -119,6 +119,51 @@ function PowerMap() {
         نقشهٔ تعاملی جریان قدرت
       </h2>
 
+      <div className="mb-6 border-b border-[color:var(--line)] pb-5">
+        <p className="eyebrow">یک لایه از قدرت را جدا ببینید</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="lab-phase-btn"
+            data-current={kind === null ? "true" : "false"}
+            onClick={() => setKind(null)}
+          >
+            همهٔ جریان‌ها
+          </button>
+          {(
+            [
+              "votes",
+              "authority",
+              "accountability",
+              "information",
+              "coercion",
+            ] as const
+          ).map((k) => (
+            <button
+              key={k}
+              type="button"
+              className="lab-phase-btn inline-flex items-center gap-2"
+              data-current={kind === k ? "true" : "false"}
+              onClick={() => setKind((prev) => (prev === k ? null : k))}
+            >
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ background: KIND_STROKE[k] }}
+                aria-hidden
+              />
+              {KIND_LABEL[k]}
+            </button>
+          ))}
+        </div>
+        {kind ? (
+          <p className="mt-3 text-[0.9rem] leading-7 text-[color:var(--muted)]">
+            فقط جریان‌های «{KIND_LABEL[kind]}» نشان داده می‌شود
+            {" · "}
+            {powerMapEdges.filter((e) => e.kind === kind).length} مسیر در این نقشه
+          </p>
+        ) : null}
+      </div>
+
       <div className="relative mx-auto hidden aspect-square w-full max-w-3xl md:block lg:aspect-[5/4]" data-tour="atlas-nodes">
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
@@ -223,51 +268,6 @@ function PowerMap() {
             </span>
           </p>
         )}
-      </div>
-
-      <div className="mt-8 border-t border-[color:var(--line)] pt-5">
-        <p className="eyebrow">یک لایه از قدرت را جدا ببینید</p>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="lab-phase-btn"
-            data-current={kind === null ? "true" : "false"}
-            onClick={() => setKind(null)}
-          >
-            همهٔ جریان‌ها
-          </button>
-          {(
-            [
-              "votes",
-              "authority",
-              "accountability",
-              "information",
-              "coercion",
-            ] as const
-          ).map((k) => (
-            <button
-              key={k}
-              type="button"
-              className="lab-phase-btn inline-flex items-center gap-2"
-              data-current={kind === k ? "true" : "false"}
-              onClick={() => setKind((prev) => (prev === k ? null : k))}
-            >
-              <span
-                className="inline-block h-2 w-2 rounded-full"
-                style={{ background: KIND_STROKE[k] }}
-                aria-hidden
-              />
-              {KIND_LABEL[k]}
-            </button>
-          ))}
-        </div>
-        {kind ? (
-          <p className="mt-3 text-[0.9rem] leading-7 text-[color:var(--muted)]">
-            فقط جریان‌های «{KIND_LABEL[kind]}» نشان داده می‌شود
-            {" · "}
-            {powerMapEdges.filter((e) => e.kind === kind).length} مسیر در این نقشه
-          </p>
-        ) : null}
       </div>
     </div>
   );

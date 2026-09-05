@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ConstitutionConfig } from "@/content/builder";
-import { crises } from "@/content/crises";
+import { crises, historicalCasesByCrisis } from "@/content/crises";
 import { resolveCrisis } from "@/lib/simulation-engine";
 
 const ORDINAL = [
@@ -99,6 +99,7 @@ export function CrisisSimulator({ config }: CrisisSimulatorProps) {
             <p className="eyebrow" data-tone="power">درس نهادی</p>
             <p className="text-base leading-8">{resolution.lessonFa}</p>
           </div>
+          <HistoricalCases crisisId={crisis.id} choiceId={choiceId} />
           <button
             type="button"
             className="cta-primary"
@@ -113,5 +114,71 @@ export function CrisisSimulator({ config }: CrisisSimulatorProps) {
         </div>
       ) : null}
     </div>
+  );
+}
+
+function HistoricalCases({
+  crisisId,
+  choiceId,
+}: {
+  crisisId: string;
+  choiceId: string | null;
+}) {
+  const cases = historicalCasesByCrisis[crisisId];
+  if (!cases?.length) return null;
+
+  // Cases matching the path the user took come first.
+  const ordered = [
+    ...cases.filter((c) => c.choiceId === choiceId),
+    ...cases.filter((c) => c.choiceId !== choiceId),
+  ];
+
+  return (
+    <details className="result-card" open>
+      <summary className="cursor-pointer list-none">
+        <span className="eyebrow">در تاریخ چه گذشت؟</span>
+        <span className="ms-2 text-sm text-[color:var(--muted)]">
+          {ordered.length} نمونهٔ مستند از سدهٔ نوزدهم تا امروز
+        </span>
+      </summary>
+
+      <div className="mt-5 space-y-5">
+        {ordered.map((item) => (
+          <div
+            key={item.id}
+            className="border-s border-[color:var(--line-strong)] ps-4"
+          >
+            <p className="font-display text-base font-medium">
+              {item.flag ? (
+                <span className="me-1.5" aria-hidden>
+                  {item.flag}
+                </span>
+              ) : null}
+              {item.placeFa}
+              <span className="ms-2 text-sm font-normal opacity-55" lang="en" dir="ltr">
+                {item.placeEn}
+              </span>
+              <span className="ms-2 text-sm font-normal text-[color:var(--muted)]">
+                · {item.yearsFa}
+              </span>
+              {item.choiceId === choiceId ? (
+                <span className="ms-2 text-xs text-[color:var(--muted)]">
+                  (نزدیک به انتخاب شما)
+                </span>
+              ) : null}
+            </p>
+            <p className="mt-2 text-[0.95rem] leading-8 text-[color:var(--ink-soft)]">
+              {item.summaryFa}
+            </p>
+            <p className="mt-2 text-[0.95rem] leading-8">{item.takeawayFa}</p>
+          </div>
+        ))}
+
+        <p className="border-t border-[color:var(--line)] pt-4 text-sm leading-7 text-[color:var(--muted)]">
+          این نمونه‌ها برای نشان دادن سازوکار نهادها آمده‌اند، نه داوری دربارهٔ
+          کشورها. انتخاب موردها بر پایهٔ مستند بودن و روشنی سازوکار است.
+        </p>
+      </div>
+    </details>
   );
 }
