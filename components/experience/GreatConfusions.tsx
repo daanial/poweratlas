@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { confusions } from "@/content/systems";
+import { ConfusionDiagram } from "@/components/experience/ConfusionDiagram";
 import { ModuleTerms } from "@/components/ui/GlossaryChip";
 import { WhyThisMatters } from "@/components/ui/WhyThisMatters";
 
@@ -40,7 +41,7 @@ export function GreatConfusions() {
             <button
               key={card.id}
               type="button"
-              className="relative min-h-[11rem] border border-[color:var(--line-strong)] rounded-xl bg-transparent p-0 text-start [perspective:900px]"
+              className="relative min-h-[15rem] border border-[color:var(--line-strong)] rounded-xl bg-transparent p-0 text-start [perspective:900px]"
               aria-expanded={open}
               onClick={() => toggle(card.id)}
             >
@@ -48,7 +49,7 @@ export function GreatConfusions() {
                 {open ? "پنهان کردن توضیح" : "نمایش توضیح"}
               </span>
               <span
-                className={`relative block h-full min-h-[11rem] w-full transition-transform duration-500 ease-out [transform-style:preserve-3d] motion-reduce:transition-none ${
+                className={`relative block h-full min-h-[15rem] w-full transition-transform duration-500 ease-out [transform-style:preserve-3d] motion-reduce:transition-none ${
                   open ? "[transform:rotateY(180deg)]" : ""
                 }`}
               >
@@ -57,15 +58,18 @@ export function GreatConfusions() {
                     {card.statementFa}
                   </span>
                   <span className="text-xs text-[color:var(--muted)]">
-                    برای آشکار شدن بزن
+                    ادامه مطلب
                   </span>
                 </span>
                 <span className="absolute inset-0 flex flex-col justify-between bg-[color-mix(in_srgb,var(--power)_8%,var(--paper))] p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]">
                   <span className="text-sm leading-7 text-[color:var(--ink-soft)]">
                     {card.revealFa}
                   </span>
-                  <span className="mt-3 text-[0.7rem] leading-5 text-[color:var(--institution)]">
-                    {card.visualHintFa}
+                  <span className="mt-2 block">
+                    <ConfusionDiagram id={card.id} />
+                    <span className="mt-1 block text-[0.7rem] leading-5 text-[color:var(--institution)]">
+                      {card.visualHintFa}
+                    </span>
                   </span>
                 </span>
               </span>
