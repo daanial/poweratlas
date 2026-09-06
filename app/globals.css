@@ -270,19 +270,30 @@ body {
 }
 
 .chapter-band[data-band="0"] {
-  --band-bg: color-mix(in srgb, var(--institution) 6%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--institution) 22%, var(--paper));
 }
 
 .chapter-band[data-band="1"] {
-  --band-bg: color-mix(in srgb, var(--law) 6%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--law) 24%, var(--paper));
 }
 
 .chapter-band[data-band="2"] {
-  --band-bg: color-mix(in srgb, var(--power) 5%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--power) 12%, var(--paper));
 }
 
 .chapter-band[data-band="cta"] {
-  --band-bg: color-mix(in srgb, var(--ink) 5%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--ink) 10%, var(--paper));
+}
+
+/* The chapter the site treats as its central thesis — a stronger, warmer
+   wash plus a heavier top seam, so it visibly outranks the alternating
+   rhythm around it instead of just taking the next color in the cycle. */
+.chapter-band[data-band="emphasis"] {
+  --band-bg: color-mix(in srgb, var(--power) 20%, var(--paper));
+}
+
+.chapter-band[data-band="emphasis"]::before {
+  border-top: 2px solid var(--power);
 }
 
 .opt-btn {
