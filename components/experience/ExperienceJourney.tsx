@@ -209,7 +209,11 @@ export function ExperienceJourney() {
 
   if (!path) {
     return (
-      <section className="section-block" aria-labelledby="path-choice">
+      <section
+        className="section-block chapter-band"
+        data-band="0"
+        aria-labelledby="path-choice"
+      >
         <h2
           id="path-choice"
           className="font-display text-3xl font-medium md:text-5xl"
@@ -293,7 +297,7 @@ export function ExperienceJourney() {
       {chapters.map((c, i) => {
         const Module = c.Component;
         return (
-          <div key={c.id}>
+          <div key={c.id} className="chapter-band" data-band={String(i % 3)}>
             <ChapterHead n={i + 1} total={total} chapter={c} />
             <Module />
             <ChapterTakeaway n={i + 1} text={c.takeawayFa} />
@@ -301,14 +305,11 @@ export function ExperienceJourney() {
         );
       })}
 
-      <section className="section-block border-t border-[color:var(--line)]">
+      <section className="section-block chapter-band" data-band="2">
         <PowerInstrument />
       </section>
 
-      <section
-        id="lab-cta"
-        className="section-block border-t border-[color:var(--line)]"
-      >
+      <section id="lab-cta" className="section-block chapter-band" data-band="cta">
         <p className="eyebrow">پایان مسیر</p>
         <p className="font-display text-3xl font-medium md:text-4xl">
           حالا نوبت شماست.

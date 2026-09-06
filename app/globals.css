@@ -244,6 +244,47 @@ body {
   padding-inline: clamp(1.25rem, 4vw, 2.5rem);
 }
 
+/**
+ * Full-bleed background band behind one journey section, so scrolling
+ * between chapters reads as moving between distinct rooms instead of one
+ * undifferentiated column. The background bleeds edge-to-edge via the
+ * ::before trick (100vw, centered with a negative margin) while the actual
+ * content stays in normal flow inside its max-w-6xl ancestor — layouts of
+ * the modules inside are untouched.
+ */
+.chapter-band {
+  position: relative;
+}
+
+.chapter-band::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: var(--band-bg, transparent);
+  border-top: 1px solid var(--line);
+  z-index: -1;
+}
+
+.chapter-band[data-band="0"] {
+  --band-bg: color-mix(in srgb, var(--institution) 6%, var(--paper));
+}
+
+.chapter-band[data-band="1"] {
+  --band-bg: color-mix(in srgb, var(--law) 6%, var(--paper));
+}
+
+.chapter-band[data-band="2"] {
+  --band-bg: color-mix(in srgb, var(--power) 5%, var(--paper));
+}
+
+.chapter-band[data-band="cta"] {
+  --band-bg: color-mix(in srgb, var(--ink) 5%, var(--paper));
+}
+
 .opt-btn {
   border: 1px solid var(--line-strong);
   background: transparent;
