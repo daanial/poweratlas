@@ -81,7 +81,14 @@ export function HeroVideoScrub() {
       // Set imperatively (not as a JSX `src` attr) so the server-rendered
       // markup never contains a fetchable video URL — a mobile/slow-connection
       // client swaps to the static branch before this effect ever runs.
-      if (!video.src) video.src = HERO_VIDEO_SRC;
+      // `preload="none"` means the browser won't start fetching just because
+      // `.src` was assigned — `.load()` is required to force it regardless
+      // of the preload hint, otherwise readyState/networkState sit idle and
+      // `loadedmetadata` never fires.
+      if (!video.src) {
+        video.src = HERO_VIDEO_SRC;
+        video.load();
+      }
 
       const unlock = () => {
         void video
