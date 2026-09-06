@@ -41,7 +41,7 @@ export function GreatConfusions() {
             <button
               key={card.id}
               type="button"
-              className="relative min-h-[15rem] border border-[color:var(--line-strong)] rounded-xl bg-transparent p-0 text-start [perspective:900px]"
+              className="relative min-h-[15rem] border border-[color:var(--line-strong)] rounded-xl bg-[rgba(255,255,255,0.4)] p-0 text-start [perspective:900px]"
               aria-expanded={open}
               onClick={() => toggle(card.id)}
             >

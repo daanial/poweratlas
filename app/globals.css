@@ -254,6 +254,10 @@ body {
  */
 .chapter-band {
   position: relative;
+  /* Own stacking context, so the -1 z-index ::before below stays scoped to
+     this section instead of sinking under PageShell's later-painted
+     .theme-paper background (a plain, non-positioned ancestor). */
+  isolation: isolate;
 }
 
 .chapter-band::before {
@@ -265,40 +269,35 @@ body {
   width: 100vw;
   transform: translateX(-50%);
   background: var(--band-bg, transparent);
-  border-top: 1px solid var(--line);
   z-index: -1;
 }
 
 .chapter-band[data-band="0"] {
-  --band-bg: color-mix(in srgb, var(--institution) 22%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--institution) 12%, var(--paper));
 }
 
 .chapter-band[data-band="1"] {
-  --band-bg: color-mix(in srgb, var(--law) 24%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--law) 13%, var(--paper));
 }
 
 .chapter-band[data-band="2"] {
-  --band-bg: color-mix(in srgb, var(--power) 12%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--power) 8%, var(--paper));
 }
 
 .chapter-band[data-band="cta"] {
-  --band-bg: color-mix(in srgb, var(--ink) 10%, var(--paper));
+  --band-bg: color-mix(in srgb, var(--ink) 7%, var(--paper));
 }
 
 /* The chapter the site treats as its central thesis — a stronger, warmer
-   wash plus a heavier top seam, so it visibly outranks the alternating
-   rhythm around it instead of just taking the next color in the cycle. */
+   wash so it visibly outranks the alternating rhythm around it instead of
+   just taking the next color in the cycle. */
 .chapter-band[data-band="emphasis"] {
-  --band-bg: color-mix(in srgb, var(--power) 20%, var(--paper));
-}
-
-.chapter-band[data-band="emphasis"]::before {
-  border-top: 2px solid var(--power);
+  --band-bg: color-mix(in srgb, var(--power) 15%, var(--paper));
 }
 
 .opt-btn {
   border: 1px solid var(--line-strong);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.4);
   color: inherit;
   padding: 0.65rem 1rem;
   text-align: start;
@@ -815,4 +814,31 @@ button.lab-phase-btn:hover {
 /* Safari still paints a marker on <summary> without this. */
 summary::-webkit-details-marker {
   display: none;
+}
+
+/* Site footer — explicit paper/ink tokens (not the ambient .theme-paper
+   class) so it reads the same on every page, including the dark home hero. */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.footer-col-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.footer-link {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--power);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

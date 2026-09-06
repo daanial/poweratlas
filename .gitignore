@@ -43,3 +43,6 @@ next-env.d.ts
 # internal working docs (kept local, not published)
 /docs/
 /contentexpansionbrief.md
+
+# personal Claude Code permission overrides, not shared config
+.claude/settings.local.json
