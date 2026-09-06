@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Footer } from "@/components/layout/Footer";
 import { site } from "@/content/opening";
 import "./globals.css";
 
@@ -28,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" className={`${ibmPlexSansArabic.variable} h-full`}>
-      <body className="min-h-full font-sans antialiased">{children}</body>
+      <body className="min-h-full font-sans antialiased">
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

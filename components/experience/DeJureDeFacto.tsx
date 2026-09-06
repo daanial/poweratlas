@@ -69,7 +69,7 @@ export function DeJureDeFacto() {
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
-        <div className="border border-[color:var(--line)] rounded-xl p-5">
+        <div className="border border-[color:var(--line)] rounded-xl bg-[rgba(255,255,255,0.4)] p-5">
           <p className="text-xs font-medium text-[color:var(--institution)]">
             روی کاغذ
           </p>
@@ -96,7 +96,7 @@ export function DeJureDeFacto() {
           </div>
         </div>
 
-        <div className="border border-[color:var(--line)] rounded-xl border-s-[3px] border-s-[color:var(--power)] p-5">
+        <div className="border border-[color:var(--line)] rounded-xl border-s-[3px] border-s-[color:var(--power)] bg-[rgba(255,255,255,0.4)] p-5">
           <p className="text-xs font-medium text-[color:var(--power)]">
             در عمل
           </p>

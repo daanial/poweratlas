@@ -11,6 +11,7 @@ import {
   powerMapEdges,
   powerMapNodes,
   powerMapNodesById,
+  removalCheckNodeIds,
 } from "@/content/power-map";
 import type { PowerMapEdgeKind, PowerMapNode } from "@/content/types";
 import Link from "next/link";
@@ -23,6 +24,7 @@ const KIND_LABEL: Record<PowerMapEdgeKind, string> = {
   accountability: "پاسخ‌گویی",
   information: "اطلاعات",
   coercion: "اجبار",
+  removal: "برکناری / وتو",
 };
 
 /** Which builder rule in the laboratory actually moves this node. */
@@ -45,6 +47,7 @@ const KIND_STROKE: Record<PowerMapEdgeKind, string> = {
   information: "var(--law)",
   accountability: "var(--ink-soft)",
   coercion: "var(--power)",
+  removal: "var(--ink)",
 };
 
 function subscribeReducedMotion(onChange: () => void) {
@@ -135,6 +138,7 @@ function PowerMap() {
               "votes",
               "authority",
               "accountability",
+              "removal",
               "information",
               "coercion",
             ] as const
@@ -334,6 +338,10 @@ function NodeDetail({
       otherFa: powerMapNodesById[e.to]?.labelFa ?? e.to,
     }));
 
+  const noRemovalPath =
+    removalCheckNodeIds.includes(node.id) &&
+    !incoming.some((e) => e.kind === "removal");
+
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
@@ -359,6 +367,13 @@ function NodeDetail({
       <p className="text-[0.95rem] leading-8 text-[color:var(--ink-soft)] md:text-base">
         {node.explanationFa}
       </p>
+
+      {noRemovalPath ? (
+        <p className="mt-3 border-s-2 border-[color:var(--ink)] ps-3 text-[0.9rem] leading-7 text-[color:var(--ink-soft)]">
+          هیچ نهاد دیگری در این نقشه سازوکار رسمی برای برکناری یا وتوی{" "}
+          {node.labelFa} ندارد.
+        </p>
+      ) : null}
 
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         <FlowList

@@ -8,6 +8,7 @@ import { MonarchyRepublic } from "@/components/experience/MonarchyRepublic";
 import { GreatConfusions } from "@/components/experience/GreatConfusions";
 import { DeJureDeFacto } from "@/components/experience/DeJureDeFacto";
 import { PowerConcentration } from "@/components/experience/PowerConcentration";
+import { PowerInstrument } from "@/components/experience/PowerInstrument";
 import {
   type ExperiencePath,
   VISIT_KEYS,
@@ -21,6 +22,8 @@ type Chapter = {
   questionFa: string;
   takeawayFa: string;
   dense?: boolean;
+  /** Background band tone for this chapter's full-bleed section. */
+  band: "0" | "1" | "2" | "emphasis";
   Component: ComponentType;
 };
 
@@ -34,6 +37,7 @@ const CHAPTERS: Chapter[] = [
       "وقتی می‌گوییم یک کشور «جمهوری» یا «پادشاهی» است، واقعاً چه چیزی را گفته‌ایم؟",
     takeawayFa:
       "«چه کسی حکومت می‌کند» یک برچسب نیست؛ چند لایه است که هم‌زمان کار می‌کنند.",
+    band: "0",
     Component: WhoRules,
   },
   {
@@ -42,6 +46,7 @@ const CHAPTERS: Chapter[] = [
     questionFa: "اگر اسم نظام را بدانی، آیا می‌دانی چه کسی تصمیم می‌گیرد؟",
     takeawayFa:
       "تفاوت اصلی نظام‌ها این است که دولت به چه کسی پاسخ می‌دهد و چه کسی می‌تواند برکنارش کند.",
+    band: "1",
     Component: ExecutiveMachine,
   },
   {
@@ -50,6 +55,7 @@ const CHAPTERS: Chapter[] = [
     questionFa: "پادشاهی و جمهوری چه چیزی را روشن می‌کنند و چه چیزی را نه؟",
     takeawayFa:
       "این دو فقط می‌گویند رئیس کشور چگونه انتخاب می‌شود؛ دربارهٔ اندازهٔ قدرت او چیزی نمی‌گویند.",
+    band: "2",
     Component: MonarchyRepublic,
   },
   {
@@ -58,6 +64,7 @@ const CHAPTERS: Chapter[] = [
     questionFa: "کدام برچسب‌ها بیشتر از همه گمراه‌کننده‌اند؟",
     takeawayFa:
       "برچسب‌های آشنا بیشتر از آنکه توضیح دهند پنهان می‌کنند؛ باید پرسید چه کسی می‌تواند «نه» بگوید.",
+    band: "0",
     Component: GreatConfusions,
   },
   {
@@ -67,6 +74,7 @@ const CHAPTERS: Chapter[] = [
     takeawayFa:
       "متن قانون و رفتار واقعی دو چیزند؛ استقلال روی کاغذ، تضمین استقلال در عمل نیست.",
     dense: true,
+    band: "emphasis",
     Component: DeJureDeFacto,
   },
   {
@@ -76,6 +84,7 @@ const CHAPTERS: Chapter[] = [
     takeawayFa:
       "هر جابه‌جایی تمرکز قدرت، چیزی را سریع‌تر و چیز دیگری را شکننده‌تر می‌کند.",
     dense: true,
+    band: "1",
     Component: PowerConcentration,
   },
 ];
@@ -126,7 +135,7 @@ function JourneyMap({
 }) {
   return (
     <nav
-      className="result-card mx-[clamp(1.25rem,4vw,2.5rem)] mt-6"
+      className="result-card mx-[clamp(1.25rem,4vw,2.5rem)] mb-10 mt-6 md:mb-14"
       aria-label="نقشهٔ مسیر"
     >
       <p className="eyebrow">نقشهٔ مسیر</p>
@@ -208,7 +217,11 @@ export function ExperienceJourney() {
 
   if (!path) {
     return (
-      <section className="section-block" aria-labelledby="path-choice">
+      <section
+        className="section-block chapter-band"
+        data-band="0"
+        aria-labelledby="path-choice"
+      >
         <h2
           id="path-choice"
           className="font-display text-3xl font-medium md:text-5xl"
@@ -292,7 +305,7 @@ export function ExperienceJourney() {
       {chapters.map((c, i) => {
         const Module = c.Component;
         return (
-          <div key={c.id}>
+          <div key={c.id} className="chapter-band" data-band={c.band}>
             <ChapterHead n={i + 1} total={total} chapter={c} />
             <Module />
             <ChapterTakeaway n={i + 1} text={c.takeawayFa} />
@@ -300,10 +313,11 @@ export function ExperienceJourney() {
         );
       })}
 
-      <section
-        id="lab-cta"
-        className="section-block border-t border-[color:var(--line)]"
-      >
+      <section className="section-block chapter-band" data-band="2">
+        <PowerInstrument />
+      </section>
+
+      <section id="lab-cta" className="section-block chapter-band" data-band="cta">
         <p className="eyebrow">پایان مسیر</p>
         <p className="font-display text-3xl font-medium md:text-4xl">
           حالا نوبت شماست.

@@ -43,7 +43,7 @@ export const referenceLinks: readonly SiteLink[] = [
     href: "/glossary",
     labelFa: "واژه‌نامه",
     labelEn: "Glossary",
-    descFa: "سی اصطلاح برای خواندن نقشهٔ قدرت.",
+    descFa: "اصطلاح‌های سازوکار قدرت، به‌علاوهٔ واژه‌نامهٔ اندیشهٔ سیاسی.",
     minutesFa: "مرجع",
   },
   {
@@ -125,7 +125,7 @@ export const journeyCopy = {
   overviewLead:
     "چهار مسیر اصلی، به‌ترتیب پیشنهادشده. واژه‌نامه و درباره برای مراجعهٔ بعدی‌اند.",
   referenceTitle: "درباره و واژه‌نامه",
-  referenceDesc: "اصل بی‌طرفی، منابع، و سی اصطلاح برای خواندن بقیهٔ سایت.",
+  referenceDesc: "اصل بی‌طرفی، منابع، و واژه‌نامهٔ سازوکار و اندیشهٔ سیاسی.",
   continueHintShort: "مسیر ۱۰ دقیقه‌ای را از همان‌جا ادامه بده.",
   continueHintFull: "مسیر ۳۰ دقیقه‌ای را از همان‌جا ادامه بده.",
 } as const;

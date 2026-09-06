@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@media print {
+  .site-nav,
+  .power-instrument-print {
+    display: none !important;
+  }
+}
+
 :root {
   /* Editorial palette — locked theme (no mid-page mode flip) */
   --ink: #141210;
@@ -237,9 +244,60 @@ body {
   padding-inline: clamp(1.25rem, 4vw, 2.5rem);
 }
 
+/**
+ * Full-bleed background band behind one journey section, so scrolling
+ * between chapters reads as moving between distinct rooms instead of one
+ * undifferentiated column. The background bleeds edge-to-edge via the
+ * ::before trick (100vw, centered with a negative margin) while the actual
+ * content stays in normal flow inside its max-w-6xl ancestor — layouts of
+ * the modules inside are untouched.
+ */
+.chapter-band {
+  position: relative;
+  /* Own stacking context, so the -1 z-index ::before below stays scoped to
+     this section instead of sinking under PageShell's later-painted
+     .theme-paper background (a plain, non-positioned ancestor). */
+  isolation: isolate;
+}
+
+.chapter-band::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: var(--band-bg, transparent);
+  z-index: -1;
+}
+
+.chapter-band[data-band="0"] {
+  --band-bg: color-mix(in srgb, var(--institution) 12%, var(--paper));
+}
+
+.chapter-band[data-band="1"] {
+  --band-bg: color-mix(in srgb, var(--law) 13%, var(--paper));
+}
+
+.chapter-band[data-band="2"] {
+  --band-bg: color-mix(in srgb, var(--power) 8%, var(--paper));
+}
+
+.chapter-band[data-band="cta"] {
+  --band-bg: color-mix(in srgb, var(--ink) 7%, var(--paper));
+}
+
+/* The chapter the site treats as its central thesis — a stronger, warmer
+   wash so it visibly outranks the alternating rhythm around it instead of
+   just taking the next color in the cycle. */
+.chapter-band[data-band="emphasis"] {
+  --band-bg: color-mix(in srgb, var(--power) 15%, var(--paper));
+}
+
 .opt-btn {
   border: 1px solid var(--line-strong);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.4);
   color: inherit;
   padding: 0.65rem 1rem;
   text-align: start;
@@ -277,6 +335,77 @@ body {
   backdrop-filter: blur(10px);
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   border-bottom: 1px solid var(--line);
+}
+
+.nav-burger {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  border-radius: var(--radius-sm);
+}
+
+.nav-burger-bar,
+.nav-burger-bar::before,
+.nav-burger-bar::after {
+  content: "";
+  display: block;
+  width: 1.15rem;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.nav-burger-bar {
+  position: relative;
+}
+
+.nav-burger-bar::before {
+  position: absolute;
+  top: -0.4rem;
+}
+
+.nav-burger-bar::after {
+  position: absolute;
+  top: 0.4rem;
+}
+
+.nav-burger-bar[data-open="true"] {
+  background: transparent;
+}
+
+.nav-burger-bar[data-open="true"]::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.nav-burger-bar[data-open="true"]::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.mobile-nav-panel {
+  max-height: calc(100dvh - 4rem);
+  overflow-y: auto;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.mobile-nav-panel ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 0.9rem 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.mobile-nav-link[data-active="true"] {
+  color: var(--power);
 }
 
 .cta-primary {
@@ -685,4 +814,31 @@ button.lab-phase-btn:hover {
 /* Safari still paints a marker on <summary> without this. */
 summary::-webkit-details-marker {
   display: none;
+}
+
+/* Site footer — explicit paper/ink tokens (not the ambient .theme-paper
+   class) so it reads the same on every page, including the dark home hero. */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.footer-col-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.footer-link {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--power);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
