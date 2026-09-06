@@ -853,3 +853,51 @@ export const glossary: GlossaryTerm[] = [
 export const glossaryById: Record<string, GlossaryTerm> = Object.fromEntries(
   glossary.map((t) => [t.id, t]),
 );
+
+/**
+ * The first ~30 entries above are curated institutional-mechanism terms that
+ * the rest of the site actually uses (via ModuleTerms / GlossedText). Everything
+ * from "absolutism" on is an alphabetical political-ideology encyclopedia import —
+ * useful as reference, but a different kind of list, so the glossary page
+ * shows them separately instead of one undifferentiated wall of 100+ rows.
+ */
+const MECHANISM_TERM_IDS = new Set([
+  "separation-of-powers",
+  "federalism",
+  "proportional-representation",
+  "fptp",
+  "no-confidence-vote",
+  "judicial-review",
+  "veto-player",
+  "executive-aggrandizement",
+  "competitive-authoritarianism",
+  "democratic-backsliding",
+  "ceremonial-head-of-state",
+  "minority-government",
+  "governing-coalition",
+  "dissolution-of-parliament",
+  "impeachment",
+  "executive-decree",
+  "electoral-threshold",
+  "alternation-in-power",
+  "independent-oversight-body",
+  "state-vs-public-media",
+  "civilian-control",
+  "self-coup",
+  "legitimacy",
+  "rule-of-law",
+  "ethnic-federalism",
+  "bicameral",
+  "parliamentary-immunity",
+  "referendum",
+  "intra-party-competition",
+  "institutional-capture",
+]);
+
+export const mechanismTerms: GlossaryTerm[] = glossary.filter((t) =>
+  MECHANISM_TERM_IDS.has(t.id),
+);
+
+export const ideologyTerms: GlossaryTerm[] = glossary.filter(
+  (t) => !MECHANISM_TERM_IDS.has(t.id),
+);

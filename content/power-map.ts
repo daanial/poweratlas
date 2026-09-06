@@ -363,6 +363,93 @@ export const powerMapEdges: PowerMapEdge[] = [
     kind: "votes",
     labelFa: "عضویت / حمایت",
   },
+
+  // Removal / veto layer: who can end another actor's hold on power, not
+  // just who oversees or answers to whom. A node with no incoming edge
+  // here is the practical answer to "چه کسی می‌تواند به این نه بگوید؟".
+  {
+    id: "parliament-government-removal",
+    from: "parliament",
+    to: "government",
+    kind: "removal",
+    labelFa: "رأی عدم اعتماد",
+  },
+  {
+    id: "parliament-pm-removal",
+    from: "parliament",
+    to: "primeMinister",
+    kind: "removal",
+    labelFa: "رأی عدم اعتماد",
+  },
+  {
+    id: "parliament-president-removal",
+    from: "parliament",
+    to: "president",
+    kind: "removal",
+    labelFa: "استیضاح",
+  },
+  {
+    id: "parliament-courts-removal",
+    from: "parliament",
+    to: "courts",
+    kind: "removal",
+    labelFa: "استیضاح قضات",
+  },
+  {
+    id: "president-pm-removal",
+    from: "president",
+    to: "primeMinister",
+    kind: "removal",
+    labelFa: "عزل",
+  },
+  {
+    id: "president-government-removal",
+    from: "president",
+    to: "government",
+    kind: "removal",
+    labelFa: "عزل دولت",
+  },
+  {
+    id: "courts-government-removal",
+    from: "courts",
+    to: "government",
+    kind: "removal",
+    labelFa: "ابطال حکم اجرایی",
+  },
+  {
+    id: "courts-parliament-removal",
+    from: "courts",
+    to: "parliament",
+    kind: "removal",
+    labelFa: "ابطال مصوبه",
+  },
+  {
+    id: "military-government-removal",
+    from: "military",
+    to: "government",
+    kind: "removal",
+    labelFa: "کودتا",
+  },
+  {
+    id: "independent-elections-removal",
+    from: "independentBodies",
+    to: "elections",
+    kind: "removal",
+    labelFa: "رد صلاحیت / ابطال نتیجه",
+  },
+];
+
+/** Node ids checked for "no one can formally end this actor's tenure" —
+ * limited to actors that actually hold power, not sources of legitimacy
+ * (people, elections, parties, media, civil society) or the rulebook itself. */
+export const removalCheckNodeIds: readonly string[] = [
+  "government",
+  "president",
+  "primeMinister",
+  "monarch",
+  "parliament",
+  "courts",
+  "military",
 ];
 
 export const powerMapNodesById: Record<string, PowerMapNode> =

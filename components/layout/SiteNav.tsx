@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { journeyStepFor, navLinks } from "@/content/journey";
 import { site } from "@/content/opening";
 
@@ -13,6 +14,7 @@ function isActive(pathname: string, href: string) {
 export function SiteNav() {
   const pathname = usePathname() ?? "/";
   const crumb = journeyStepFor(pathname);
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="site-nav">
@@ -23,12 +25,13 @@ export function SiteNav() {
         <Link
           href="/"
           className="shrink-0 no-underline"
+          onClick={() => setOpen(false)}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/wordmark.png"
             alt={site.titleFa}
-            className="block h-auto w-auto max-w-[250px]"
+            className="block h-auto w-auto max-w-[180px] md:max-w-[250px]"
           />
           <span className="sr-only" lang="en" dir="ltr">
             {site.titleEn}
@@ -40,7 +43,7 @@ export function SiteNav() {
           ) : null}
         </Link>
 
-        <ul className="flex min-w-0 flex-1 items-center gap-x-1 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] md:overflow-visible [&::-webkit-scrollbar]:hidden sm:gap-x-2">
+        <ul className="hidden min-w-0 flex-1 items-center gap-x-1 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] md:flex md:overflow-visible [&::-webkit-scrollbar]:hidden sm:gap-x-2">
           {navLinks.map((link) => {
             const active = isActive(pathname, link.href);
             const tip = [link.descFa, link.minutesFa]
@@ -85,7 +88,51 @@ export function SiteNav() {
             );
           })}
         </ul>
+
+        <button
+          type="button"
+          className="nav-burger ms-auto flex shrink-0 items-center justify-center md:hidden"
+          aria-expanded={open}
+          aria-controls="mobile-nav-panel"
+          aria-label={open ? "بستن منو" : "باز کردن منو"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="nav-burger-bar" data-open={open ? "true" : "false"} />
+        </button>
       </nav>
+
+      {open ? (
+        <div id="mobile-nav-panel" className="mobile-nav-panel md:hidden">
+          <ul>
+            {navLinks.map((link) => {
+              const active = isActive(pathname, link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="mobile-nav-link"
+                    aria-current={active ? "page" : undefined}
+                    data-active={active ? "true" : "false"}
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span>{link.labelFa}</span>
+                      {link.minutesFa ? (
+                        <span className="text-[0.7rem] opacity-55">
+                          {link.minutesFa}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="mt-0.5 block text-[0.75rem] leading-5 opacity-60">
+                      {link.descFa}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
     </header>
   );
 }

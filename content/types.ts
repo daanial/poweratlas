@@ -21,7 +21,8 @@ export type PowerMapEdgeKind =
   | "votes"
   | "information"
   | "accountability"
-  | "coercion";
+  | "coercion"
+  | "removal";
 
 export type FingerprintAxisId =
   | "executiveConcentration"

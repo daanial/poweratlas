@@ -22,6 +22,33 @@ function usePrefersReducedMotion() {
   );
 }
 
+type NetworkInformation = {
+  saveData?: boolean;
+  effectiveType?: "slow-2g" | "2g" | "3g" | "4g";
+};
+
+function shouldSkipVideo(): boolean {
+  if (typeof window === "undefined") return false;
+  if (window.matchMedia("(max-width: 767px)").matches) return true;
+  const nav = navigator as Navigator & { connection?: NetworkInformation };
+  const conn = nav.connection;
+  if (!conn) return false;
+  if (conn.saveData) return true;
+  return conn.effectiveType === "slow-2g" || conn.effectiveType === "2g" || conn.effectiveType === "3g";
+}
+
+function subscribeSkipVideo(onChange: () => void) {
+  const mq = window.matchMedia("(max-width: 767px)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+/** Mobile viewports and slow/data-saver connections get the static poster,
+ * never the 9MB hero video — same fallback as prefers-reduced-motion. */
+function useSkipVideo() {
+  return useSyncExternalStore(subscribeSkipVideo, shouldSkipVideo, () => false);
+}
+
 const HERO_VIDEO_SRC = "/videos/hero.mp4?v=scrub";
 const HERO_POSTER_SRC = "/videos/hero-poster.jpg";
 const HERO_LOGO_SRC = "/brand/logo.png";
@@ -42,12 +69,19 @@ export function HeroVideoScrub() {
   const rootRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const reduced = usePrefersReducedMotion();
+  const skipVideo = useSkipVideo();
+  const showStatic = reduced || skipVideo;
 
   useGSAP(
     (_, contextSafe) => {
       const root = rootRef.current;
       const video = videoRef.current;
-      if (!root || !video || reduced || !contextSafe) return;
+      if (!root || !video || showStatic || !contextSafe) return;
+
+      // Set imperatively (not as a JSX `src` attr) so the server-rendered
+      // markup never contains a fetchable video URL — a mobile/slow-connection
+      // client swaps to the static branch before this effect ever runs.
+      if (!video.src) video.src = HERO_VIDEO_SRC;
 
       const unlock = () => {
         void video
@@ -152,10 +186,10 @@ export function HeroVideoScrub() {
         if (raf) cancelAnimationFrame(raf);
       };
     },
-    { scope: rootRef, dependencies: [reduced], revertOnUpdate: true },
+    { scope: rootRef, dependencies: [showStatic], revertOnUpdate: true },
   );
 
-  if (reduced) {
+  if (showStatic) {
     return (
       <section
         ref={rootRef}
@@ -198,11 +232,10 @@ export function HeroVideoScrub() {
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
-          src={HERO_VIDEO_SRC}
           poster={HERO_POSTER_SRC}
           muted
           playsInline
-          preload="auto"
+          preload="none"
           disablePictureInPicture
           controls={false}
           aria-hidden="true"

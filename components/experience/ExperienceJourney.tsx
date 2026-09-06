@@ -8,6 +8,7 @@ import { MonarchyRepublic } from "@/components/experience/MonarchyRepublic";
 import { GreatConfusions } from "@/components/experience/GreatConfusions";
 import { DeJureDeFacto } from "@/components/experience/DeJureDeFacto";
 import { PowerConcentration } from "@/components/experience/PowerConcentration";
+import { PowerInstrument } from "@/components/experience/PowerInstrument";
 import {
   type ExperiencePath,
   VISIT_KEYS,
@@ -299,6 +300,10 @@ export function ExperienceJourney() {
           </div>
         );
       })}
+
+      <section className="section-block border-t border-[color:var(--line)]">
+        <PowerInstrument />
+      </section>
 
       <section
         id="lab-cta"

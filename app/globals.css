@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@media print {
+  .site-nav,
+  .power-instrument-print {
+    display: none !important;
+  }
+}
+
 :root {
   /* Editorial palette — locked theme (no mid-page mode flip) */
   --ink: #141210;
@@ -277,6 +284,77 @@ body {
   backdrop-filter: blur(10px);
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   border-bottom: 1px solid var(--line);
+}
+
+.nav-burger {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  border-radius: var(--radius-sm);
+}
+
+.nav-burger-bar,
+.nav-burger-bar::before,
+.nav-burger-bar::after {
+  content: "";
+  display: block;
+  width: 1.15rem;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.nav-burger-bar {
+  position: relative;
+}
+
+.nav-burger-bar::before {
+  position: absolute;
+  top: -0.4rem;
+}
+
+.nav-burger-bar::after {
+  position: absolute;
+  top: 0.4rem;
+}
+
+.nav-burger-bar[data-open="true"] {
+  background: transparent;
+}
+
+.nav-burger-bar[data-open="true"]::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.nav-burger-bar[data-open="true"]::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.mobile-nav-panel {
+  max-height: calc(100dvh - 4rem);
+  overflow-y: auto;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.mobile-nav-panel ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 0.9rem 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.mobile-nav-link[data-active="true"] {
+  color: var(--power);
 }
 
 .cta-primary {

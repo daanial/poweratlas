@@ -102,6 +102,17 @@ export function ConstitutionBuilder({
   const [chosen, setChosen] = useState<Set<string>>(() => new Set());
   const [lastStepPicked, setLastStepPicked] = useState(false);
 
+  // Delta since you started building, so flipping a rule shows what moved
+  // instead of just the new absolute numbers. Baseline is captured once at
+  // mount and never updated — simpler than diffing against the previous
+  // render, which collapses to zero before paint (React re-renders a
+  // render-time state adjustment synchronously, so it never actually shows).
+  const [baseline] = useState(fingerprint);
+  const deltaExecutive =
+    fingerprint.executiveConcentration - baseline.executiveConcentration;
+  const deltaLegislative =
+    fingerprint.legislativeStrength - baseline.legislativeStrength;
+
   const steps = showExtra ? builderSteps : builderSteps.slice(0, CORE_STEP_COUNT);
   const step = steps[current] ?? steps[0];
   const stepCount = steps.length;
@@ -293,9 +304,13 @@ export function ConstitutionBuilder({
           </ul>
 
           <p className="mt-3 text-[0.65rem] leading-5 text-[color:var(--muted)]">
-            تمرکز اجرایی تقریبی: {Math.round(fingerprint.executiveConcentration * 100)}٪ ·
-            قدرت مجلس: {Math.round(fingerprint.legislativeStrength * 100)}٪
-            <span className="mt-1 block opacity-70">این اعداد توصیف‌اند، نه امتیاز اخلاقی.</span>
+            تمرکز اجرایی تقریبی: {Math.round(fingerprint.executiveConcentration * 100)}٪
+            <DeltaBadge value={deltaExecutive} /> · قدرت مجلس:{" "}
+            {Math.round(fingerprint.legislativeStrength * 100)}٪
+            <DeltaBadge value={deltaLegislative} />
+            <span className="mt-1 block opacity-70">
+              این اعداد توصیف‌اند، نه امتیاز اخلاقی. عدد داخل پرانتز، تغییر نسبت به نظامی است که با آن شروع کردید.
+            </span>
           </p>
         </div>
       </aside>
@@ -322,5 +337,20 @@ export function ConstitutionBuilder({
         </button>
       </div>
     </div>
+  );
+}
+
+/** Shows the change since the last rule flip; silent when nothing moved. */
+function DeltaBadge({ value }: { value: number }) {
+  const pct = Math.round(value * 100);
+  if (pct === 0) return null;
+  return (
+    <span
+      className="ms-1"
+      style={{ color: pct > 0 ? "var(--power)" : "var(--institution)" }}
+    >
+      ({pct > 0 ? "+" : ""}
+      {pct})
+    </span>
   );
 }
